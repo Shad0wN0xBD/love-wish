@@ -1,0 +1,1 @@
+# neoncoin-worker
