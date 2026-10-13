@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>💖 Special Surprise For You</title>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@400;600;700&family=Galada&family=Dancing+Script:wght@700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;width:100%;overflow:hidden;font-family:'Anek Bangla',sans-serif;background:#0d0015;color:#fff;}
+#customBg{position:fixed;inset:0;z-index:0;background:radial-gradient(circle at 50% 30%,#4a0033 0%,#150024 60%,#080010 100%);}
+.giant-heart-bg{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1;font-size:360px;color:rgba(255,45,117,0.18);filter:drop-shadow(0 0 80px rgba(255,45,117,0.5));animation:heartPulse 2s ease-in-out infinite;pointer-events:none;user-select:none;}
+@keyframes heartPulse{0%,100%{transform:translate(-50%,-50%) scale(1);}50%{transform:translate(-50%,-50%) scale(1.15);}}
+#heartsCanvas{position:fixed;inset:0;z-index:2;pointer-events:none;}
+
+#giftScreen{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;transition:opacity .8s ease;cursor:pointer;}
+#giftScreen.hide{opacity:0;pointer-events:none;}
+.gift-title{font-size:1.25rem;line-height:1.8;color:#fff;max-width:360px;margin-bottom:30px;font-weight:600;text-shadow:0 2px 15px rgba(255,45,117,.95),0 0 30px rgba(255,107,157,.5);}
+.gift-title .first-line{font-family:'Galada',cursive;font-size:1.45rem;color:#ffe082;display:block;margin-bottom:6px;text-shadow:0 0 12px rgba(255,224,130,.7);}
+.gift-box{position:relative;width:150px;height:150px;cursor:pointer;animation:boxShake 1.4s ease-in-out infinite;filter:drop-shadow(0 20px 40px rgba(255,45,117,.8));}
+@keyframes boxShake{0%,100%{transform:rotate(0) scale(1);}15%{transform:rotate(-6deg) scale(1.03);}30%{transform:rotate(6deg) scale(1.05);}45%{transform:rotate(-4deg) scale(1.03);}60%{transform:rotate(4deg) scale(1.05);}75%{transform:rotate(0) scale(1);}}
+.gift-lid{position:absolute;top:-12px;left:-10px;width:170px;height:40px;background:linear-gradient(135deg,#ff2d75,#ff6b9d);border-radius:8px;box-shadow:0 4px 20px rgba(255,45,117,.7);transition:all .9s ease;}
+.gift-lid::before{content:"";position:absolute;top:-22px;left:50%;transform:translateX(-50%);width:50px;height:45px;background:linear-gradient(135deg,#ffb3d1,#ff2d75);clip-path:polygon(50% 0%,0% 100%,50% 75%,100% 100%);border-radius:0 0 20px 20px;}
+.gift-box.open .gift-lid{transform:translateY(-180px) rotate(-45deg);opacity:0;}
+.gift-body{position:absolute;top:28px;left:5px;width:140px;height:120px;background:linear-gradient(135deg,#d81b60,#ff4081);border-radius:10px;box-shadow:inset 0 0 30px rgba(0,0,0,.35),0 10px 30px rgba(255,45,117,.5);overflow:hidden;}
+.gift-body::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:20px;height:100%;background:linear-gradient(180deg,#ffe082,#ffb3d1);}
+.gift-body::after{content:"";position:absolute;top:50%;left:0;transform:translateY(-50%);width:100%;height:20px;background:linear-gradient(90deg,#ffe082,#ffb3d1);}
+.tap-hint{margin-top:30px;font-size:1.05rem;color:#ffb3d1;font-weight:600;animation:pulseGlow 2s ease-in-out infinite;}
+@keyframes pulseGlow{0%,100%{opacity:.6;transform:scale(1);}50%{opacity:1;transform:scale(1.05);text-shadow:0 0 20px #ff3d7f;}}
+
+#wishScreen{position:fixed;inset:0;z-index:9;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;opacity:0;transition:opacity .8s ease;overflow-y:auto;}
+#wishScreen.show{display:flex;opacity:1;}
+.names-container{margin-bottom:12px;}
+.from-to{font-family:'Poppins',sans-serif;font-size:.85rem;color:#ffb3d1;letter-spacing:3px;text-transform:uppercase;font-weight:600;}
+.sender-name,.receiver-name{font-family:'Dancing Script',cursive;font-size:2.8rem;background:linear-gradient(135deg,#fff,#ffb3d1,#ff2d75);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;padding:0 6px;}
+.heart-divider{font-size:1.6rem;margin:3px 0;animation:pulseGlow 1.5s infinite;}
+.message-box{max-width:480px;width:100%;min-height:140px;background:radial-gradient(circle at 50% 50%,rgba(255,45,117,.25) 0%,rgba(20,0,30,.75) 85%);border:1.5px solid rgba(255,45,117,.45);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:24px;padding:24px;margin-bottom:20px;box-shadow:0 0 30px rgba(255,45,117,.35),inset 0 0 15px rgba(255,45,117,.15);position:relative;overflow:hidden;}
+.message-box::before{content:"❤️";position:absolute;font-size:140px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.11;pointer-events:none;filter:blur(2px);}
+.typed-text{font-size:1.1rem;line-height:2;color:#fff;text-align:left;word-wrap:break-word;white-space:pre-wrap;z-index:2;position:relative;}
+.next-step-btn{display:none;padding:12px 35px;background:linear-gradient(135deg,#ff2d75,#ff6b9d);color:#fff;border:none;border-radius:50px;font-size:1.05rem;font-weight:700;cursor:pointer;box-shadow:0 8px 30px rgba(255,45,117,.6);animation:pulseGlow 1.8s infinite;font-family:'Poppins',sans-serif;letter-spacing:1px;}
+
+#proposalScreen{position:fixed;inset:0;z-index:9;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;opacity:0;transition:opacity .8s ease;overflow-y:auto;}
+#proposalScreen.show{display:flex;opacity:1;}
+.question-box{max-width:400px;width:100%;background:radial-gradient(circle at 50% 50%,rgba(255,45,117,.22) 0%,rgba(20,0,30,.75) 85%);border:1.5px solid rgba(255,45,117,.45);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:24px;padding:30px 20px;box-shadow:0 0 30px rgba(255,45,117,.35);}
+.profile-avatar-wrap{width:130px;height:130px;margin:0 auto 16px;border-radius:50%;padding:4px;background:linear-gradient(135deg,#ff2d75,#ffe082,#ff6b9d);box-shadow:0 0 25px rgba(255,45,117,.8);animation:avatarGlow 2.5s infinite alternate;}
+@keyframes avatarGlow{0%{transform:scale(1);box-shadow:0 0 20px rgba(255,45,117,.6);}100%{transform:scale(1.04);box-shadow:0 0 35px rgba(255,107,157,.95);}}
+.profile-avatar{width:100%;height:100%;border-radius:50%;object-fit:cover;background:#1e002e;display:block;}
+.avatar-fallback{width:100%;height:100%;border-radius:50%;background:#1e002e;display:flex;align-items:center;justify-content:center;font-size:56px;}
+.proposal-top-text{font-size:1.1rem;color:#ffe082;margin-bottom:8px;font-weight:600;text-shadow:0 0 10px rgba(255,224,130,.5);white-space:pre-wrap;}
+.question-title{font-family:'Poppins',sans-serif;font-size:1.65rem;font-weight:700;color:#ffb3d1;margin-bottom:8px;}
+.question-sub{font-size:1rem;color:#f0f0f0;margin-bottom:24px;}
+.yn-btn-group{display:flex;justify-content:center;gap:15px;}
+.yn-btn{flex:1;padding:14px;border:none;border-radius:50px;font-size:1.15rem;font-weight:bold;cursor:pointer;transition:transform .2s;font-family:'Poppins',sans-serif;}
+.btn-yes{background:linear-gradient(135deg,#ff2d75,#ff6b9d);color:#fff;box-shadow:0 8px 25px rgba(255,45,117,.6);}
+.btn-no{background:rgba(255,255,255,.15);color:#eee;border:1px solid rgba(255,255,255,.25);}
+#yesResult{display:none;margin-top:18px;padding:16px;background:rgba(255,45,117,.25);border-radius:16px;border:1px solid rgba(255,45,117,.5);}
+#noResult{display:none;margin-top:18px;padding:16px;background:rgba(0,0,0,.5);border-radius:16px;border:1px solid rgba(255,255,255,.2);}
+.share-btn-wrap{display:flex;flex-direction:column;gap:10px;margin-top:15px;}
+.share-btn{padding:12px;border-radius:50px;border:none;color:#fff;font-size:.95rem;font-weight:600;display:none;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-family:'Poppins',sans-serif;}
+.wa-btn{background:#25D366;box-shadow:0 5px 15px rgba(37,211,102,.4);}
+.tg-btn{background:#0088cc;box-shadow:0 5px 15px rgba(0,136,204,.4);}
+#badLink{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;font-size:1.1rem;line-height:1.8;}
+</style>
+</head>
+<body>
+
+<audio id="bgMusic" preload="auto" loop></audio>
+
+<div id="customBg"></div>
+<div class="giant-heart-bg">❤️</div>
+<canvas id="heartsCanvas"></canvas>
+
+<div id="badLink">😕 লিংকটা ঠিক নেই।<br>যে পাঠিয়েছে তাকে নতুন লিংক দিতে বলো।</div>
+
+<div id="giftScreen">
+  <div class="gift-title">
+    <span class="first-line">💌 আপনাকে কেউ একটি স্পেশাল চিঠি পাঠিয়েছে</span>
+    তা দেখতে লাভের ওপর ট্যাপ করুন...<br>আশা করি আপনার ভালো লাগবে! 💖✨
+  </div>
+  <div class="gift-box" id="giftBox"><div class="gift-lid"></div><div class="gift-body"></div></div>
+  <div class="tap-hint">👆 গিফট বক্সে ট্যাপ করুন 🎁</div>
+</div>
+
+<div id="wishScreen">
+  <div class="names-container">
+    <div class="from-to">FROM</div>
+    <div class="sender-name" id="fromName"></div>
+    <div class="heart-divider">❤️</div>
+    <div class="from-to">TO</div>
+    <div class="receiver-name" id="toName"></div>
+  </div>
+  <div class="message-box"><div class="typed-text" id="typedText"></div></div>
+  <button class="next-step-btn" id="nextStepBtn">NEXT STEP 👉</button>
+</div>
+
+<div id="proposalScreen">
+  <div class="question-box">
+    <div class="profile-avatar-wrap" id="avatarWrap"></div>
+    <div class="proposal-top-text" id="topText"></div>
+    <div class="question-title">💖 Do you love me? 💖</div>
+    <div class="question-sub">মনের সব কথা আজ খুলে বলো... 🙈</div>
+    <div class="yn-btn-group" id="btnGroup">
+      <button class="yn-btn btn-yes" id="btnYes">YES 🥰</button>
+      <button class="yn-btn btn-no" id="btnNo">NO 🥺</button>
+    </div>
+    <div id="yesResult">
+      <h3 style="color:#ffb3d1;margin-bottom:8px;">Yay! I Love You So Much! ❤️🥰</h3>
+      <p style="font-size:.95rem;color:#fff;margin-bottom:6px;">তোমার হ্যাঁ বলাটাই আমার জীবনের সেরা অনুভূতি! সারাজীবন পাশে থেকো। 🌸✨</p>
+      <div class="share-btn-wrap" id="shareWrap">
+        <a class="share-btn wa-btn" id="waShare" href="#" target="_blank" rel="noopener">💬 WhatsApp</a>
+        <a class="share-btn tg-btn" id="tgShare" href="#" target="_blank" rel="noopener">✈️ Telegram</a>
+      </div>
+    </div>
+    <div id="noResult">
+      <h3 style="color:#ff8585;margin-bottom:8px;">মনটা ভেঙে গেল... 🥺💔😭</h3>
+      <p style="font-size:.95rem;color:#ddd;">"যাকে আপন ভেবেছিলাম সে-ই না বলে দিল... যাই হোক, ভালো থেকো।" 🥀🌧️</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+function $(id){return document.getElementById(id)}
+
+function bad(msg){
+  $("giftScreen").style.display="none";
+  if(msg)$("badLink").innerHTML=msg;
+  $("badLink").style.display="flex";
+}
+function fromD(raw){
+  try{
+    var b=raw.replace(/-/g,"+").replace(/_/g,"/");
+    while(b.length%4)b+="=";
+    var bin=atob(b),bytes=new Uint8Array(bin.length);
+    for(var k=0;k<bin.length;k++)bytes[k]=bin.charCodeAt(k);
+    return JSON.parse(new TextDecoder().decode(bytes));
+  }catch(e){return null}
+}
+var qs=new URLSearchParams(location.search);
+var wishId=(qs.get("id")||"").replace(/[^A-Za-z0-9_-]/g,"");
+$("giftScreen").style.visibility="hidden";
+function ok(c){
+  if(!c||!c.f||!c.t){bad();return}
+  $("giftScreen").style.visibility="visible";
+  start(c);
+}
+if(wishId){
+  fetch("wishes/"+wishId+".json?t="+Date.now(),{cache:"no-store"})
+    .then(function(r){if(!r.ok)throw 0;return r.json()})
+    .then(ok)
+    .catch(function(){bad("⏳ সারপ্রাইজটা এখনও তৈরি হচ্ছে, অথবা লিংক ঠিক নেই।<br>১ মিনিট পর পেজ রিফ্রেশ করো।")});
+}else if(qs.get("d")){
+  ok(fromD(qs.get("d")));
+}else{
+  bad();
+}
+
+function start(cfg){
+var fromName=cfg.f,toName=cfg.t;
+var wishMsg=cfg.m&&cfg.m.trim()?cfg.m:"তোমার জন্য মনের গভীর থেকে একটুখানি ভালোবাসা..!💗";
+var topMsg=cfg.p&&cfg.p.trim()?cfg.p:"তুমি হবে তো একান্তই আমার? আমি অপেক্ষায় রইলাম তোমার 💗";
+
+$("fromName").textContent=fromName;
+$("toName").textContent=toName;
+$("topText").textContent=topMsg;
+document.title="💖 "+fromName+" এর পক্ষ থেকে Surprise";
+
+var wrap=$("avatarWrap");
+function fallback(){wrap.innerHTML="";var d=document.createElement("div");d.className="avatar-fallback";d.textContent="💖";wrap.appendChild(d)}
+if(cfg.i){
+  var img=document.createElement("img");
+  img.className="profile-avatar";img.alt="Profile";
+  img.onerror=fallback;img.src=cfg.i;
+  wrap.appendChild(img);
+}else{fallback()}
+
+var audio=$("bgMusic");
+if(cfg.a){audio.src=cfg.a}
+
+var canvas=$("heartsCanvas"),ctx=canvas.getContext("2d");
+var W=canvas.width=innerWidth,H=canvas.height=innerHeight;
+addEventListener("resize",function(){W=canvas.width=innerWidth;H=canvas.height=innerHeight});
+var hearts=[],emojis=["❤️","💖","💕","🌸","✨"],looping=false;
+function Heart(){this.x=Math.random()*W;this.y=H+20;this.size=14+Math.random()*24;this.speedY=1+Math.random()*2;this.emoji=emojis[Math.floor(Math.random()*emojis.length)]}
+Heart.prototype.update=function(){this.y-=this.speedY;if(this.y<-30){this.y=H+20;this.x=Math.random()*W}};
+Heart.prototype.draw=function(){ctx.font=this.size+"px serif";ctx.fillText(this.emoji,this.x,this.y)};
+function loop(){ctx.clearRect(0,0,W,H);for(var i=0;i<hearts.length;i++){hearts[i].update();hearts[i].draw()}requestAnimationFrame(loop)}
+
+function typeMsg(text,cb){
+  var c=$("typedText"),i=0;
+  function step(){if(i<text.length){c.textContent+=text.charAt(i);i++;setTimeout(step,75)}else if(cb){cb()}}
+  step();
+}
+
+function openGift(){
+  var box=$("giftBox");
+  if(box.classList.contains("open"))return;
+  box.classList.add("open");
+  if(cfg.a){try{var p=audio.play();if(p&&p.catch)p.catch(function(){})}catch(e){}}
+  for(var i=0;i<25;i++)hearts.push(new Heart());
+  if(!looping){looping=true;loop()}
+  setTimeout(function(){
+    $("giftScreen").classList.add("hide");
+    $("wishScreen").classList.add("show");
+    typeMsg(wishMsg,function(){$("nextStepBtn").style.display="inline-block"});
+  },650);
+}
+$("giftScreen").addEventListener("click",openGift);
+$("giftBox").addEventListener("click",function(e){e.stopPropagation();openGift()});
+
+$("nextStepBtn").addEventListener("click",function(){
+  $("wishScreen").classList.remove("show");
+  $("proposalScreen").classList.add("show");
+});
+
+$("btnYes").addEventListener("click",function(){
+  $("btnGroup").style.display="none";
+  $("yesResult").style.display="block";
+  var reply=encodeURIComponent("হ্যাঁ "+fromName+"! আমিও তোমাকে ভালোবাসি! ❤️🥰");
+  var wa=(cfg.w||"").replace(/[^0-9]/g,""),tg=(cfg.g||"").replace(/[^A-Za-z0-9_]/g,"");
+  if(wa){var a=$("waShare");a.href="https://wa.me/"+wa+"?text="+reply;a.style.display="inline-flex"}
+  if(tg){var t=$("tgShare");t.href="https://t.me/"+tg;t.style.display="inline-flex"}
+  if(!wa&&!tg)$("shareWrap").style.display="none";
+  for(var i=0;i<30;i++)hearts.push(new Heart());
+});
+$("btnNo").addEventListener("click",function(){
+  $("btnGroup").style.display="none";
+  $("noResult").style.display="block";
+});
+}
+})();
+</script>
+</body>
+</html>
