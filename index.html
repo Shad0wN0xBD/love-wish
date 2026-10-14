@@ -73,6 +73,11 @@ ol{padding-left:20px;margin-top:6px}
     <label class="drop" id="dropI">➕ নতুন ছবি আপলোড (ট্যাপ বা ড্রপ)<span class="fn" id="fnI"></span><input type="file" id="fi" accept="image/*"></label>
     <label class="l">WhatsApp নম্বর (YES এর পর রিপ্লাই বাটনের জন্য)</label><input type="text" id="w" inputmode="tel" placeholder="8801XXXXXXXXX">
     <label class="l">Telegram Username</label><input type="text" id="g" placeholder="@username">
+    <label class="l">Messenger Username (facebook.com/ এর পরের নাম)</label><input type="text" id="ms" placeholder="facebook.username" autocapitalize="none">
+    <label class="l">Instagram Username</label><input type="text" id="ig" placeholder="@username" autocapitalize="none">
+    <label class="l">TikTok Username</label><input type="text" id="tk" placeholder="@username" autocapitalize="none">
+    <label class="l">IMO নম্বর</label><input type="text" id="im" inputmode="tel" placeholder="01XXXXXXXXX">
+    <div class="hint">যেগুলো ব্যবহার করো শুধু সেগুলো দাও। যেটা খালি থাকবে সেটার বাটন আসবে না।</div>
     <button id="mk" onclick="gate('save',make,1)">✨ লিংক তৈরি করো</button>
     <div class="st" id="st"></div>
     <div id="result"><label class="l">তোমার লিংক</label><div id="linkBox"></div>
@@ -151,7 +156,7 @@ function pollLive(url,n){return new Promise(function(res){var c=0;(function go()
 async function make(){
   var f=$("f").value.trim(),t=$("t").value.trim();
   if(!f||!t){setSt("From আর To নাম দিতেই হবে।",true);return}
-  var cfg={f:f,t:t,m:$("m").value,p:$("p").value.trim(),a:S.a,i:S.i,w:$("w").value.replace(/[^0-9]/g,""),g:$("g").value.replace("@","").trim()};
+  var cfg={f:f,t:t,m:$("m").value,p:$("p").value.trim(),a:S.a,i:S.i,w:$("w").value.replace(/[^0-9]/g,""),g:$("g").value.replace("@","").trim(),ms:$("ms").value.replace("@","").trim(),ig:$("ig").value.replace("@","").trim(),tk:$("tk").value.replace("@","").trim(),im:$("im").value.replace(/[^0-9]/g,"")};
   var fa=$("fa").files[0],fi=$("fi").files[0];$("mk").disabled=true;$("result").style.display="none";
   try{
     if(fa){setSt("🎵 গান আপলোড হচ্ছে...");cfg.a=await upload("audio",fa,fa.name)}

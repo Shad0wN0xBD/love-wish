@@ -59,6 +59,11 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Anek Bangla',sans-
 .share-btn{padding:12px;border-radius:50px;border:none;color:#fff;font-size:.95rem;font-weight:600;display:none;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-family:'Poppins',sans-serif;}
 .wa-btn{background:#25D366;box-shadow:0 5px 15px rgba(37,211,102,.4);}
 .tg-btn{background:#0088cc;box-shadow:0 5px 15px rgba(0,136,204,.4);}
+.ms-btn{background:linear-gradient(135deg,#00b2ff,#a334fa,#ff5ca1);}
+.ig-btn{background:linear-gradient(45deg,#f9ce34,#ee2a7b,#6228d7);}
+.tk-btn{background:#000;border:1px solid rgba(255,255,255,.35);}
+.imo-btn{background:#1a8cff;}
+#cpNote{display:none;font-size:.88rem;color:#ffe082;margin-top:12px;line-height:1.7;}
 #badLink{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;text-align:center;padding:30px;font-size:1.1rem;line-height:1.8;}
 </style>
 </head>
@@ -109,7 +114,12 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Anek Bangla',sans-
       <div class="share-btn-wrap" id="shareWrap">
         <a class="share-btn wa-btn" id="waShare" href="#" target="_blank" rel="noopener">💬 WhatsApp</a>
         <a class="share-btn tg-btn" id="tgShare" href="#" target="_blank" rel="noopener">✈️ Telegram</a>
+        <a class="share-btn ms-btn" id="msShare" href="#" target="_blank" rel="noopener">💬 Messenger</a>
+        <a class="share-btn ig-btn" id="igShare" href="#" target="_blank" rel="noopener">📸 Instagram</a>
+        <a class="share-btn tk-btn" id="tkShare" href="#" target="_blank" rel="noopener">🎵 TikTok</a>
+        <a class="share-btn imo-btn" id="imoShare" href="#" target="_blank" rel="noopener">📞 IMO</a>
       </div>
+      <div id="cpNote">✅ মেসেজ কপি হয়েছে! চ্যাট খুললে পেস্ট করে সেন্ড করো।</div>
     </div>
     <div id="noResult">
       <h3 style="color:#ff8585;margin-bottom:8px;">মনটা ভেঙে গেল... 🥺💔😭</h3>
@@ -220,11 +230,23 @@ $("nextStepBtn").addEventListener("click",function(){
 $("btnYes").addEventListener("click",function(){beacon("yes");
   $("btnGroup").style.display="none";
   $("yesResult").style.display="block";
-  var reply=encodeURIComponent("হ্যাঁ "+fromName+"! আমিও তোমাকে ভালোবাসি! ❤️🥰");
-  var wa=(cfg.w||"").replace(/[^0-9]/g,""),tg=(cfg.g||"").replace(/[^A-Za-z0-9_]/g,"");
+  var msg="হ্যাঁ "+fromName+"! আমিও তোমাকে ভালোবাসি! ❤️🥰";
+  var reply=encodeURIComponent(msg);
+  function clean(s){return (s||"").replace(/[^A-Za-z0-9_.]/g,"")}
+  var wa=(cfg.w||"").replace(/[^0-9]/g,""),tg=clean(cfg.g),ms=clean(cfg.ms),ig=clean(cfg.ig),tk=clean(cfg.tk),im=(cfg.im||"").replace(/[^0-9]/g,"");
+  function copyMsg(){
+    try{navigator.clipboard.writeText(msg)}catch(e){}
+    try{var x=document.createElement("textarea");x.value=msg;document.body.appendChild(x);x.select();document.execCommand("copy");x.remove()}catch(e2){}
+    $("cpNote").style.display="block";
+  }
+  function setBtn(id,url){var b=$(id);b.href=url;b.style.display="inline-flex";b.addEventListener("click",copyMsg)}
   if(wa){var a=$("waShare");a.href="https://wa.me/"+wa+"?text="+reply;a.style.display="inline-flex"}
-  if(tg){var t=$("tgShare");t.href="https://t.me/"+tg;t.style.display="inline-flex"}
-  if(!wa&&!tg)$("shareWrap").style.display="none";
+  if(tg)setBtn("tgShare","https://t.me/"+tg);
+  if(ms)setBtn("msShare","https://m.me/"+ms);
+  if(ig)setBtn("igShare","https://ig.me/m/"+ig);
+  if(tk)setBtn("tkShare","https://www.tiktok.com/@"+tk);
+  if(im)setBtn("imoShare","imo://");
+  if(!wa&&!tg&&!ms&&!ig&&!tk&&!im)$("shareWrap").style.display="none";
   for(var i=0;i<30;i++)hearts.push(new Heart());
 });
 $("btnNo").addEventListener("click",function(){beacon("no");
