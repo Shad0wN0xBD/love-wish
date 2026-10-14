@@ -134,7 +134,7 @@ function render(){
     var la=l.ans&&l.ans[l.ans.length-1],tm=la?new Date(la.t).toLocaleString("bn-BD"):"";
     var rs=la?'<br><b style="cursor:default;padding:0;color:'+(la.r==="yes"?"#7dffa8":"#ff8585")+'">'+(la.r==="yes"?"✅ হ্যাঁ বলেছে":"❌ না বলেছে")+'</b> <small style="opacity:.7">'+tm+'</small>':'<br><b style="cursor:default;padding:0;color:#ffe082">⏳ এখনও উত্তর নেই</b>';
     rs+='<br><small style="opacity:.75">👁 খুলেছে '+(l.views||0)+' · হ্যাঁ '+(l.yes||0)+' · না '+(l.no||0)+'</small>';
-    return '<div class="it"><span>'+esc(l.f)+' → '+esc(l.t)+rs+'<br><a href="'+u+'" target="_blank">'+u+'</a></span><button class="sm alt" onclick="cp(\''+u+'\')">কপি</button><b onclick="delIt(\'link\',\''+l.id+'\')">🗑</b></div>'}).join(""):'<div class="hint">এখনও কোনো লিংক নেই</div>'}
+    return '<div class="it"><span>'+esc(l.f)+' → '+esc(l.t)+rs+'<br><a href="'+u+'" target="_blank">'+u+'</a></span><button class="sm alt" onclick="cpW(\''+u+'\')">কপি</button><b onclick="delIt(\'link\',\''+l.id+'\')">🗑</b></div>'}).join(""):'<div class="hint">এখনও কোনো লিংক নেই</div>'}
 function pick(t,k){S[t]=k;if(k){$(t==="a"?"fa":"fi").value="";$(t==="a"?"fnA":"fnI").textContent=""}render()}
 function delIt(type,id){if(!confirm("ডিলিট করবে?"))return;post("/api/del",{u:S.u,type:type,id:id}).then(function(){if(S.a===id)S.a="";if(S.i===id)S.i="";loadMy()}).catch(function(e){toast("❌ "+e.message)})}
 function cp(t){if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){toast("✅ কপি হয়েছে")})}
@@ -170,7 +170,8 @@ async function make(){
   $("mk").disabled=false;
 }
 function show(note){$("linkBox").textContent=link;$("result").style.display="block";$("cb").textContent="📋 কপি";setSt(note||"✅ লিংক রেডি!");$("result").scrollIntoView({behavior:"smooth"})}
-function copyLink(){cp(link);$("cb").textContent="✅ কপি হয়েছে"}
+function cpW(u){cpq(WISHTXT+"\n\n👉 "+u).then(function(){toast("✅ টেক্সটসহ লিংক কপি হয়েছে")})}
+function copyLink(){cpW(link);$("cb").textContent="✅ কপি হয়েছে"}
 function shareWA(){OPEN("https://wa.me/?text="+encodeURIComponent("💌 তোমার জন্য একটা স্পেশাল সারপ্রাইজ: "+link),"_blank")}
 function shareTG(){OPEN("https://t.me/share/url?url="+encodeURIComponent(link)+"&text="+encodeURIComponent("💌 তোমার জন্য একটা স্পেশাল সারপ্রাইজ"),"_blank")}
 /* ---- share ---- */
