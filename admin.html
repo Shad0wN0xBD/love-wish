@@ -47,7 +47,7 @@ ol{padding-left:20px;margin-top:6px}
   <label class="l">একই বাটনে আবার অ্যাড আসার সময় (মিনিট)</label><input type="text" id="cd" inputmode="numeric">
   <label class="l">ডাইরেক্ট লিংক (প্রতি লাইনে ১টা, ট্যাপে খুলবে)</label><textarea id="dl"></textarea>
   <label class="l">ব্যানার কোড (--- দিয়ে আলাদা, ২টা পর্যন্ত)</label><textarea id="bn"></textarea>
-  <label class="l">ফ্লোটিং অ্যাড কোড (--- দিয়ে আলাদা, ২টা পর্যন্ত)</label><textarea id="fl"></textarea>
+  <label class="l">ফ্লোটিং অ্যাড কোড (--- দিয়ে আলাদা, ২টা পর্যন্ত)</label><textarea id="flt"></textarea>
   <label class="l">তোমার WhatsApp নম্বর (দেশের কোডসহ, যেমন 8801XXXXXXXXX)</label><input type="text" id="wa" inputmode="tel"><label class="l">তোমার Telegram Username (@ ছাড়া)</label><input type="text" id="tg">
   <button onclick="saveAds()">💾 অ্যাড সেভ</button></div>
  <div class="card"><label class="l">👥 ইউজার</label><div id="us"></div></div>
@@ -65,14 +65,14 @@ function out(){T="";sessionStorage.removeItem("at");$("ad").style.display="none"
 function start(){$("lg").style.display="none";$("ad").style.display="block";load()}
 function dt(t){return t?new Date(t).toLocaleString("bn-BD"):"-"}
 function load(){call("/admin/data").then(function(d){D=d;var s=d.stats;
- $("stat").innerHTML=[["আজকের ইউজার",s.today],["এই মাসে ইউজার",s.month],["রেজিস্টার্ড",s.users],["মোট লিংক",s.links],["আপলোড",s.media]].map(function(x){return"<div><b>"+x[1]+"</b>"+x[0]+"</div>"}).join("");
- var a=d.ads;$("on").checked=a.on;$("cd").value=a.cd;$("dl").value=a.links.join("\n");$("bn").value=a.banners.join("\n---\n");$("fl").value=a.floats.join("\n---\n");$("wa").value=a.wa||"";$("tg").value=a.tg||"";
+ $("stat").innerHTML=[["আজকের ইউজার",s.today],["এই মাসে ইউজার",s.month],["রেজিস্টার্ড",s.users],["মোট লিংক",s.links],["আপলোড",s.media],["মোট হ্যাঁ",d.links.reduce(function(r,l){return r+(l.yes||0)},0)],["মোট না",d.links.reduce(function(r,l){return r+(l.no||0)},0)]].map(function(x){return"<div><b>"+x[1]+"</b>"+x[0]+"</div>"}).join("");
+ var a=d.ads;$("on").checked=a.on;$("cd").value=a.cd;$("dl").value=a.links.join("\n");$("bn").value=a.banners.join("\n---\n");$("flt").value=a.floats.join("\n---\n");$("wa").value=a.wa||"";$("tg").value=a.tg||"";
  $("us").innerHTML=d.users.map(function(u){return'<div class="it"><span><b style="color:#ffe082;cursor:default">'+esc(u.u)+'</b><br><small>লিংক '+u.links.length+' · আপলোড '+u.media.length+' · '+dt(u.created)+'</small></span><b onclick="del(\'user\',\''+u.u+'\')">🗑</b></div>'}).join("")||"-";
- $("ls").innerHTML=d.links.sort(function(a,b){return b.created-a.created}).map(function(l){return'<div class="it"><span>'+esc(l.u)+': '+esc(l.f)+' → '+esc(l.t)+'<br><small>👁 '+(l.views||0)+' · ✅ হ্যাঁ '+(l.yes||0)+' · ❌ না '+(l.no||0)+(l.ans&&l.ans.length?' · শেষ: '+(l.ans[l.ans.length-1].r==="yes"?"হ্যাঁ":"না")+' '+dt(l.ans[l.ans.length-1].t):"")+'</small><br><a href="wish.html?id='+l.id+'" target="_blank">খোলো</a></span><b onclick="del(\'link\',\''+l.id+'\')">🗑</b></div>'}).join("")||"-";
+ $("ls").innerHTML=d.links.sort(function(a,b){return b.created-a.created}).map(function(l){var la=l.ans&&l.ans[l.ans.length-1];return'<div class="it"><span>'+esc(l.u)+': '+esc(l.f)+' → '+esc(l.t)+'<br><b style="cursor:default;color:'+(la?(la.r==="yes"?"#7dffa8":"#ff8585"):"#ffe082")+'">'+(la?(la.r==="yes"?"✅ হ্যাঁ বলেছে":"❌ না বলেছে")+' <small>'+dt(la.t)+'</small>':"⏳ এখনও উত্তর নেই")+'</b><br><small>👁 খুলেছে '+(l.views||0)+' বার · হ্যাঁ '+(l.yes||0)+' · না '+(l.no||0)+'</small><br><a href="wish.html?id='+l.id+'" target="_blank">খোলো</a></span><b onclick="del(\'link\',\''+l.id+'\')">🗑</b></div>'}).join("")||"-";
  $("ms").innerHTML=d.users.reduce(function(r,u){return r.concat(u.media)},[]).map(function(m){return'<div class="it"><span>'+esc(m.k)+' <small>'+(m.kind==="audio"?"🎵":"🖼️")+' '+Math.round(m.size/1024)+'KB</small> <a href="'+m.k+'" target="_blank">▶</a></span><b onclick="del(\'media\',\''+m.k+'\')">🗑</b></div>'}).join("")||"-"}).catch(function(e){toast(e.message)})}
 function del(type,id){if(!confirm("সত্যিই ডিলিট করবে? ("+type+")"))return;call("/admin/del",{type:type,id:id}).then(load).catch(function(e){toast(e.message)})}
 function lines(s){return s.split("\n").map(function(x){return x.trim()}).filter(Boolean)}
 function parts(s){return s.split(/^\s*---\s*$/m).map(function(x){return x.trim()}).filter(Boolean).slice(0,2)}
-function saveAds(){call("/admin/ads",{on:$("on").checked,cd:$("cd").value,links:lines($("dl").value),banners:parts($("bn").value),floats:parts($("fl").value),wa:$("wa").value,tg:$("tg").value}).then(function(){toast("✅ সেভ হয়েছে")}).catch(function(e){toast(e.message)})}
+function saveAds(){call("/admin/ads",{on:$("on").checked,cd:$("cd").value,links:lines($("dl").value),banners:parts($("bn").value),floats:parts($("flt").value),wa:$("wa").value,tg:$("tg").value}).then(function(){toast("✅ সেভ হয়েছে")}).catch(function(e){toast(e.message)})}
 if(T)start();
 </script></body></html>
