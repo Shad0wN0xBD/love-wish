@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="bn"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>🔐 Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Anek Bangla',sans-serif;background:radial-gradient(circle at 50% 0%,#4a0033,#150024 60%,#080010);color:#fff;min-height:100vh;padding:20px 16px 40px}
+.wrap{max-width:460px;margin:0 auto}
+h1{font-size:1.6rem;text-align:center;margin:10px 0 4px;color:#ffb3d1;text-shadow:0 0 15px rgba(255,45,117,.8)}
+.sub{text-align:center;opacity:.8;font-size:.95rem;margin-bottom:18px}
+.card{background:rgba(255,45,117,.12);border:1.5px solid rgba(255,45,117,.4);border-radius:22px;padding:20px;backdrop-filter:blur(12px);margin-bottom:16px}
+label.l{display:block;font-size:.9rem;color:#ffe082;margin:12px 0 5px;font-weight:600}
+input[type=text],input[type=password],textarea{width:100%;font:inherit;color:#fff;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:11px 13px;outline:none}
+input:focus,textarea:focus{border-color:#ff2d75}
+textarea{resize:vertical;min-height:110px;line-height:1.7}
+.hint{font-size:.78rem;opacity:.65;margin-top:4px;line-height:1.6}
+button{font:inherit;font-weight:700;border:0;border-radius:50px;padding:13px;color:#fff;cursor:pointer;width:100%;background:linear-gradient(135deg,#ff2d75,#ff6b9d);box-shadow:0 8px 25px rgba(255,45,117,.5);margin-top:18px}
+button.alt{background:rgba(255,255,255,.15);box-shadow:none;margin-top:10px}
+button:disabled{opacity:.5}
+.drop{display:block;border:2px dashed rgba(255,179,209,.6);border-radius:16px;padding:16px;text-align:center;cursor:pointer;background:rgba(0,0,0,.25);font-size:.92rem}
+.drop.over{background:rgba(255,45,117,.3);border-color:#ff2d75}
+.drop input{display:none}
+.drop .fn{display:block;margin-top:6px;color:#ffe082;font-size:.85rem;word-break:break-all}
+#result{display:none;margin-top:18px}
+#linkBox{word-break:break-all;font-size:.85rem;background:rgba(0,0,0,.4);border-radius:12px;padding:12px;margin:8px 0}
+.row{display:flex;gap:10px}
+.row button{margin-top:6px}
+.st{font-size:.9rem;margin-top:12px;text-align:center;line-height:1.7;color:#ffe082}
+.err{color:#ff8585}
+details{font-size:.88rem;line-height:1.8}
+summary{cursor:pointer;color:#ffb3d1;font-weight:600}
+code{background:rgba(0,0,0,.4);padding:1px 6px;border-radius:6px}
+ol{padding-left:20px;margin-top:6px}
+.pick{margin:8px 0}.it{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.3);border-radius:12px;padding:8px 10px;margin-bottom:6px;font-size:.85rem}
+.it input{width:auto}.it span{flex:1;word-break:break-all}.it b{cursor:pointer;color:#ff8585;padding:2px 8px}.it a{color:#ffe082;text-decoration:none}
+.sm{width:auto;padding:6px 12px;margin:0;font-size:.8rem}.bn{margin:10px 0;text-align:center;overflow:hidden}
+#fl{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;justify-content:center}#fl>div{position:relative;background:#000a;padding:4px}#fl i{position:absolute;top:-8px;right:-4px;background:#ff2d75;border-radius:50%;width:22px;height:22px;text-align:center;font-style:normal;cursor:pointer}
+#tt{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#ff2d75;padding:10px 18px;border-radius:30px;font-size:.88rem;z-index:99;display:none;max-width:90%;text-align:center}
+.stat{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat div{background:rgba(0,0,0,.35);border-radius:14px;padding:12px;text-align:center}.stat b{display:block;font-size:1.5rem;color:#ffe082}.wrap{max-width:640px}small{opacity:.7}
+</style></head><body><div id="tt"></div><div class="wrap">
+<h1>🔐 Admin Panel</h1>
+<div class="card" id="lg"><label class="l">পাসওয়ার্ড</label><input type="password" id="pw"><button onclick="login()">ঢোকো</button><div class="st err" id="le"></div></div>
+<div id="ad" style="display:none">
+ <div class="card"><div class="stat" id="stat"></div><button class="alt" onclick="load()">🔄 রিফ্রেশ</button><button class="alt" onclick="out()">🚪 লগআউট</button></div>
+ <div class="card"><label class="l">📢 অ্যাড সেটিং (Monetag)</label>
+  <div class="it"><input type="checkbox" id="on"><span>অ্যাড সিস্টেম চালু</span></div>
+  <label class="l">একই বাটনে আবার অ্যাড আসার সময় (মিনিট)</label><input type="text" id="cd" inputmode="numeric">
+  <label class="l">ডাইরেক্ট লিংক (প্রতি লাইনে ১টা, ট্যাপে খুলবে)</label><textarea id="dl"></textarea>
+  <label class="l">ব্যানার কোড (--- দিয়ে আলাদা, ২টা পর্যন্ত)</label><textarea id="bn"></textarea>
+  <label class="l">ফ্লোটিং অ্যাড কোড (--- দিয়ে আলাদা, ২টা পর্যন্ত)</label><textarea id="fl"></textarea>
+  <label class="l">তোমার WhatsApp নম্বর (দেশের কোডসহ, যেমন 8801XXXXXXXXX)</label><input type="text" id="wa" inputmode="tel"><label class="l">তোমার Telegram Username (@ ছাড়া)</label><input type="text" id="tg">
+  <button onclick="saveAds()">💾 অ্যাড সেভ</button></div>
+ <div class="card"><label class="l">👥 ইউজার</label><div id="us"></div></div>
+ <div class="card"><label class="l">🔗 লিংক ও উত্তর</label><div id="ls"></div></div>
+ <div class="card"><label class="l">📁 আপলোড</label><div id="ms"></div></div>
+</div></div>
+<script>
+var API="https://propuse.mt15abir2.workers.dev",T=sessionStorage.getItem("at")||"",D;
+function $(i){return document.getElementById(i)}
+function toast(t){var e=$("tt");e.textContent=t;e.style.display="block";setTimeout(function(){e.style.display="none"},3000)}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function call(p,b){return fetch(API+p,{method:b?"POST":"GET",headers:{authorization:"Bearer "+T,"content-type":"application/json"},body:b?JSON.stringify(b):undefined}).then(function(r){return r.json().then(function(j){if(r.status===401&&p!=="/admin/login"){out();throw new Error("আবার লগইন করো")}if(!r.ok)throw new Error(j.e);return j})})}
+function login(){call("/admin/login",{p:$("pw").value}).then(function(j){T=j.t;sessionStorage.setItem("at",T);$("pw").value="";start()}).catch(function(e){$("le").textContent=e.message})}
+function out(){T="";sessionStorage.removeItem("at");$("ad").style.display="none";$("lg").style.display="block"}
+function start(){$("lg").style.display="none";$("ad").style.display="block";load()}
+function dt(t){return t?new Date(t).toLocaleString("bn-BD"):"-"}
+function load(){call("/admin/data").then(function(d){D=d;var s=d.stats;
+ $("stat").innerHTML=[["আজকের ইউজার",s.today],["এই মাসে ইউজার",s.month],["রেজিস্টার্ড",s.users],["মোট লিংক",s.links],["আপলোড",s.media]].map(function(x){return"<div><b>"+x[1]+"</b>"+x[0]+"</div>"}).join("");
+ var a=d.ads;$("on").checked=a.on;$("cd").value=a.cd;$("dl").value=a.links.join("\n");$("bn").value=a.banners.join("\n---\n");$("fl").value=a.floats.join("\n---\n");$("wa").value=a.wa||"";$("tg").value=a.tg||"";
+ $("us").innerHTML=d.users.map(function(u){return'<div class="it"><span><b style="color:#ffe082;cursor:default">'+esc(u.u)+'</b><br><small>লিংক '+u.links.length+' · আপলোড '+u.media.length+' · '+dt(u.created)+'</small></span><b onclick="del(\'user\',\''+u.u+'\')">🗑</b></div>'}).join("")||"-";
+ $("ls").innerHTML=d.links.sort(function(a,b){return b.created-a.created}).map(function(l){return'<div class="it"><span>'+esc(l.u)+': '+esc(l.f)+' → '+esc(l.t)+'<br><small>👁 '+(l.views||0)+' · ✅ হ্যাঁ '+(l.yes||0)+' · ❌ না '+(l.no||0)+(l.ans&&l.ans.length?' · শেষ: '+(l.ans[l.ans.length-1].r==="yes"?"হ্যাঁ":"না")+' '+dt(l.ans[l.ans.length-1].t):"")+'</small><br><a href="wish.html?id='+l.id+'" target="_blank">খোলো</a></span><b onclick="del(\'link\',\''+l.id+'\')">🗑</b></div>'}).join("")||"-";
+ $("ms").innerHTML=d.users.reduce(function(r,u){return r.concat(u.media)},[]).map(function(m){return'<div class="it"><span>'+esc(m.k)+' <small>'+(m.kind==="audio"?"🎵":"🖼️")+' '+Math.round(m.size/1024)+'KB</small> <a href="'+m.k+'" target="_blank">▶</a></span><b onclick="del(\'media\',\''+m.k+'\')">🗑</b></div>'}).join("")||"-"}).catch(function(e){toast(e.message)})}
+function del(type,id){if(!confirm("সত্যিই ডিলিট করবে? ("+type+")"))return;call("/admin/del",{type:type,id:id}).then(load).catch(function(e){toast(e.message)})}
+function lines(s){return s.split("\n").map(function(x){return x.trim()}).filter(Boolean)}
+function parts(s){return s.split(/^\s*---\s*$/m).map(function(x){return x.trim()}).filter(Boolean).slice(0,2)}
+function saveAds(){call("/admin/ads",{on:$("on").checked,cd:$("cd").value,links:lines($("dl").value),banners:parts($("bn").value),floats:parts($("fl").value),wa:$("wa").value,tg:$("tg").value}).then(function(){toast("✅ সেভ হয়েছে")}).catch(function(e){toast(e.message)})}
+if(T)start();
+</script></body></html>

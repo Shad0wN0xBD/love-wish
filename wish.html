@@ -115,6 +115,7 @@ html,body{height:100%;width:100%;overflow:hidden;font-family:'Anek Bangla',sans-
       <h3 style="color:#ff8585;margin-bottom:8px;">মনটা ভেঙে গেল... 🥺💔😭</h3>
       <p style="font-size:.95rem;color:#ddd;">"যাকে আপন ভেবেছিলাম সে-ই না বলে দিল... যাই হোক, ভালো থেকো।" 🥀🌧️</p>
     </div>
+    <a id="ownBtn" href="index.html" style="display:block;width:max-content;max-width:100%;margin:22px auto 4px;padding:8px 16px;border-radius:50px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);color:#ffd6e6;text-decoration:none;font-size:.78rem;text-align:center;opacity:.85">💌 নিজের প্রপোজাল লিংক বানাতে ট্যাপ করুন💌 নিজের প্রপোজাল লিংক বানাতে ট্যাপ করুন</a>
   </div>
 </div>
 
@@ -139,10 +140,12 @@ function fromD(raw){
 }
 var qs=new URLSearchParams(location.search);
 var wishId=(qs.get("id")||"").replace(/[^A-Za-z0-9_-]/g,"");
+var API="https://propuse.mt15abir2.workers.dev";
+function beacon(r){try{fetch(API+"/api/ans",{method:"POST",keepalive:true,headers:{"content-type":"application/json"},body:JSON.stringify({id:wishId,r:r})})}catch(e){}}
 $("giftScreen").style.visibility="hidden";
 function ok(c){
   if(!c||!c.f||!c.t){bad();return}
-  $("giftScreen").style.visibility="visible";
+  $("giftScreen").style.visibility="visible";if(wishId)beacon("view");
   start(c);
 }
 if(wishId){
@@ -214,7 +217,7 @@ $("nextStepBtn").addEventListener("click",function(){
   $("proposalScreen").classList.add("show");
 });
 
-$("btnYes").addEventListener("click",function(){
+$("btnYes").addEventListener("click",function(){beacon("yes");
   $("btnGroup").style.display="none";
   $("yesResult").style.display="block";
   var reply=encodeURIComponent("হ্যাঁ "+fromName+"! আমিও তোমাকে ভালোবাসি! ❤️🥰");
@@ -224,7 +227,7 @@ $("btnYes").addEventListener("click",function(){
   if(!wa&&!tg)$("shareWrap").style.display="none";
   for(var i=0;i<30;i++)hearts.push(new Heart());
 });
-$("btnNo").addEventListener("click",function(){
+$("btnNo").addEventListener("click",function(){beacon("no");
   $("btnGroup").style.display="none";
   $("noResult").style.display="block";
 });
