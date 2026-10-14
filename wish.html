@@ -227,8 +227,14 @@ $("nextStepBtn").addEventListener("click",function(){
   $("proposalScreen").classList.add("show");
 });
 
-$("btnYes").addEventListener("click",function(){beacon("yes");
+function hideQ(){
+  $("topText").style.display="none";
+  document.querySelector(".question-title").style.display="none";
+  document.querySelector(".question-sub").style.display="none";
   $("btnGroup").style.display="none";
+}
+$("btnYes").addEventListener("click",function(){beacon("yes");
+  hideQ();
   $("yesResult").style.display="block";
   var msg="হ্যাঁ "+fromName+"! আমিও তোমাকে ভালোবাসি! ❤️🥰";
   var reply=encodeURIComponent(msg);
@@ -250,7 +256,7 @@ $("btnYes").addEventListener("click",function(){beacon("yes");
   for(var i=0;i<30;i++)hearts.push(new Heart());
 });
 $("btnNo").addEventListener("click",function(){beacon("no");
-  $("btnGroup").style.display="none";
+  hideQ();
   $("noResult").style.display="block";
 });
 }
