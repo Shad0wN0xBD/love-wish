@@ -38,14 +38,14 @@ ol{padding-left:20px;margin-top:6px}
 .it input{width:auto}.it span{flex:1;word-break:break-all}.it b{cursor:pointer;color:#ff8585;padding:2px 8px}.it a{color:#ffe082;text-decoration:none}
 .sm{width:auto;padding:6px 12px;margin:0;font-size:.8rem}.bn{margin:10px 0;text-align:center;overflow:hidden}
 #fl{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;justify-content:center}#fl>div{position:relative;background:#000a;padding:4px}#fl i{position:absolute;top:-8px;right:-4px;background:#ff2d75;border-radius:50%;width:22px;height:22px;text-align:center;font-style:normal;cursor:pointer}
-#nf{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#ff2d75;box-shadow:0 8px 25px rgba(0,0,0,.5);padding:10px 40px 10px 16px;border-radius:18px;font-size:.84rem;line-height:1.6;z-index:99;display:none;width:92%;max-width:440px}#nf i{position:absolute;top:6px;right:8px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.3);text-align:center;font-style:normal;cursor:pointer;line-height:26px}
-.cl{display:inline-block;margin:0 5px;padding:9px 18px;border-radius:50px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:.88rem}
+#nf{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:99;padding:20px}#nf .nc{background:linear-gradient(160deg,#3a0a3f,#1c0030);border:1px solid rgba(255,45,117,.5);border-radius:24px;padding:24px 20px;max-width:360px;width:100%;text-align:center;box-shadow:0 15px 50px rgba(0,0,0,.6)}#nf h3{color:#ffe082;margin:6px 0 10px}#nf p{font-size:.9rem;line-height:1.7;margin-bottom:14px}
+.cl{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin:6px;padding:12px 24px;border-radius:50px;color:#fff;font-weight:600;font-size:.95rem;text-decoration:none}.cl.w{background:#25D366;box-shadow:0 5px 15px rgba(37,211,102,.4)}.cl.t{background:#0088cc;box-shadow:0 5px 15px rgba(0,136,204,.4)}
 #tt{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#ff2d75;padding:10px 18px;border-radius:30px;font-size:.88rem;z-index:99;display:none;max-width:90%;text-align:center}
 </style>
 </head>
 <body>
 <div id="tt"></div>
-<div id="nf"><span>📢 অ্যাড পেজ খুলেছে। অ্যাড দেখে <b>ব্যাক করে আবার এই বাটনেই চাপো</b>, তাহলে কাজ হবে। এই নোটিশ × চেপে বন্ধ করা যায়।</span><i onclick="hideN()">×</i></div>
+<div id="nf"><div class="nc"><div style="font-size:2rem">📢</div><h3>একটা অ্যাড দেখতে হবে</h3><p>এই সার্ভিস ফ্রি রাখতে অ্যাড দেখানো হয়। নিচের বাটনে চাপলে অ্যাড পেজ খুলবে। অ্যাড দেখে <b>ব্যাক করে আবার একই বাটনে চাপলেই</b> কাজ হবে। একই বাটনে কিছুক্ষণ আর অ্যাড আসবে না।</p><button id="nfgo">✅ ঠিক আছে, অ্যাড দেখি</button><button class="alt" onclick="hideN()">এখন না</button></div></div>
 <div class="wrap">
   <h1>💌 Wish Link Maker</h1>
   <div class="sub">তথ্য দাও, গান-ছবি সিলেক্ট করো, লিংক রেডি!</div>
@@ -75,12 +75,12 @@ ol{padding-left:20px;margin-top:6px}
       <div class="row"><button class="alt" onclick="gate('wa',shareWA)">💬 WhatsApp</button><button class="alt" onclick="gate('tg',shareTG)">✈️ Telegram</button></div></div>
   </div>
   <div class="card" id="lc" style="display:none"><label class="l">🔗 আমার লিংক লিস্ট</label><div id="ll"></div><button class="alt" onclick="gate('list',loadMy)">🔄 রিফ্রেশ</button></div>
-  <div id="bn2" class="bn"></div>
   <div id="ct" class="hint" style="text-align:center;margin:10px 0"></div>
+  <div id="bn2" class="bn"></div>
 </div>
 <div id="fl"></div>
 <script>
-var API="https://propuse.mt15abir2.workers.dev";
+var API="https://YOUR-WORKER.workers.dev";
 var link="",S={u:"",k:"",my:{media:[],links:[]},a:"",i:"",ads:{on:false,links:[]}},pend={},ctr=0;
 function $(i){return document.getElementById(i)}
 function lsGet(k){try{return localStorage.getItem(k)||""}catch(e){return""}}
@@ -96,14 +96,13 @@ function gate(id,fn,always){
   var a=S.ads;if(!a.on||!a.links.length)return fn();
   if(pend[id]){delete pend[id];hideN();lsSet("ad_"+id,Date.now());return fn()}
   if(!always&&Date.now()-(+lsGet("ad_"+id)||0)<a.cd*60000)return fn();
-  pend[id]=1;window.open(a.links[(hash(id)+ctr++)%a.links.length],"_blank");
-  $("nf").style.display="block";
+  var u=a.links[(hash(id)+ctr++)%a.links.length];$("nfgo").onclick=function(){hideN();pend[id]=1;window.open(u,"_blank")};$("nf").style.display="flex";
 }
 function inj(el,h){el.innerHTML=h;[].forEach.call(el.querySelectorAll("script"),function(o){var n=document.createElement("script");[].forEach.call(o.attributes,function(x){n.setAttribute(x.name,x.value)});n.text=o.text;o.replaceWith(n)})}
 function hideN(){$("nf").style.display="none"}
 function showAds(){var a=S.ads;if(a.on)$("nt").style.display="block";if(!a.on)return;
   if(a.banners[0])inj($("bn1"),a.banners[0]);if(a.banners[1])inj($("bn2"),a.banners[1]);
-  a.floats.slice(0,2).forEach(function(h){var d=document.createElement("div"),c=document.createElement("div");c.innerHTML=h;d.appendChild(c);var x=document.createElement("i");x.textContent="×";x.onclick=function(){d.remove()};d.appendChild(x);$("fl").appendChild(d);inj(c,h)})}
+  a.floats.slice(0,2).forEach(function(h){var d=document.createElement("div"),c=document.createElement("div");c.innerHTML=h;d.appendChild(c);var x=document.createElement("i");x.textContent="×";x.onclick=function(){d.remove()};d.appendChild(x);$("fl").appendChild(d);inj(c,h);setTimeout(function(){if(c.offsetHeight<20)d.remove()},2500)})}
 /* ---- login / data ---- */
 function afterLogin(){$("uc").style.display="none";$("mc").style.display="block";$("lc").style.display="block";$("f").value=$("f").value||S.u;loadMy()}
 function login(){var u=$("un").value.trim().toLowerCase();$("us").textContent="";
@@ -159,7 +158,7 @@ function shareTG(){window.open("https://t.me/share/url?url="+encodeURIComponent(
 /* ---- init ---- */
 S.u=lsGet("u");S.k=lsGet("k");
 var aid=lsGet("aid")||"a"+Math.random().toString(36).slice(2,10);lsSet("aid",aid);
-fetch(API+"/config").then(function(r){return r.json()}).then(function(c){S.ads=c;showAds();var ch="";if(c.wa)ch+='<a class="cl" href="https://wa.me/'+esc(c.wa)+'" target="_blank">💬 WhatsApp</a>';if(c.tg)ch+='<a class="cl" href="https://t.me/'+esc(c.tg)+'" target="_blank">✈️ Telegram</a>';if(ch)$("ct").innerHTML='<div style="margin-bottom:6px">📞 যোগাযোগ</div>'+ch}).catch(function(){});
+fetch(API+"/config").then(function(r){return r.json()}).then(function(c){S.ads=c;showAds();var ch="";if(c.wa)ch+='<a class="cl w" href="https://wa.me/'+esc(c.wa.replace(/^0/,"880"))+'" target="_blank">💬 WhatsApp</a>';if(c.tg)ch+='<a class="cl t" href="https://t.me/'+esc(c.tg)+'" target="_blank">✈️ Telegram</a>';if(ch)$("ct").innerHTML='<div style="margin-bottom:6px">📞 যোগাযোগ</div>'+ch}).catch(function(){});
 fetch(API+"/api/ping?id="+(S.u||aid));
 if(S.u&&S.k){$("un").value=S.u;afterLogin()}
 </script>
